@@ -14,6 +14,6 @@ public abstract class App{
 	
 	
 	public abstract void send(String message);
-	
+	public abstract void receive(String message);
 	
 }

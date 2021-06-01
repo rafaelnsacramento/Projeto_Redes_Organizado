@@ -1,7 +1,5 @@
 package camada.transporte;
 
-import java.util.ArrayList;
-
 import camada.Camada;
 import camada.Rede;
 import camada.Sessao;
@@ -33,12 +31,20 @@ public class Transporte extends Camada implements Runnable { // Gerencia os paco
 	@Override
 	public synchronized void receive(String Bytes) {
 		Imprimir("Transporte Recebendo", Bytes);
-		if(((Sessao) receive).check(Bytes)) {
-			send.send(Bytes.substring(5,9) + Bytes.substring(1,5) + Bytes.substring(24,40));
+		if(Bytes.charAt(38) == '1') {
+			gerenciador_pacotes.confirmar_pacote(Bytes);
+			notify();
+			return;
 		}
-		else {
-			send.send(Bytes.substring(5,9) + Bytes.substring(1,5) + "1111111111111111");
-		}
+		String send_res = Bytes.substring(0,1) + Bytes.substring(5,9) + Bytes.substring(1,5) + Bytes.substring(9,38);
+		if(!((Sessao) receive).check(Bytes)) {
+			gerenciador_pacotes.add_pacote(send_res + "10");
+			notify();
+			return;
+		}			
+		gerenciador_pacotes.add_pacote(send_res +"11");
+		gerenciador_pacotes.add_received_pacote(Bytes);
+		notify();
 		
 		
 	}
@@ -51,9 +57,13 @@ public class Transporte extends Camada implements Runnable { // Gerencia os paco
 		while(true) {
 			try {
 				String send_ = gerenciador_pacotes.enviar_pacote();
-				if(send_.isBlank()) wait(5000);
+				if(send_ == null) ;
 				else send.send(send_);
 				gerenciador_pacotes.timeout_pacotes();
+				send_ = gerenciador_pacotes.get_pacote_pronto();
+				if(send_ == null) ;
+				else receive.receive(send_);
+				wait(2500);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

@@ -20,7 +20,7 @@ public class Apresentacao extends Camada { //A camada de apresentação pega a men
 		
 		
 		for (int i = 0; i < send_Message_Bytes_.length; i++)	
-			send_Message_Bytes = send_Message_Bytes + (String.format("%8s", Integer.toBinaryString(send_Message_Bytes_[i])).replace(' ', '0'));		
+			send_Message_Bytes = send_Message_Bytes + (String.format("%8s", Integer.toBinaryString((byte)send_Message_Bytes_[i] & 0xFF )).replace(' ', '0'));		
 		
 		
 		send.send(bytes.substring(0,8) + send_Message_Bytes);
@@ -29,8 +29,13 @@ public class Apresentacao extends Camada { //A camada de apresentação pega a men
 
 	@Override
 	public void receive(String Bytes) {
-		// TODO Auto-generated method stub
+		Imprimir("Apresentação Recebendo", Bytes);
+		String send_ = Bytes.substring(0, 8);
+		String a = Bytes.substring(8);
 		
+		for (int i = 0 ; i < a.length()/8; i++)
+			send_ = send_ + (char)Byte.parseByte(a.substring(i*8, (i+1)*8),2);
+		receive.receive(send_);
 	}
 
 }

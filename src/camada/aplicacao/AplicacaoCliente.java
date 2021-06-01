@@ -39,7 +39,8 @@ public class AplicacaoCliente extends Camada{
 
 	@Override
 	public void receive(String Bytes) {
-		// TODO Auto-generated method stub
+		Imprimir("Aplicação Recebendo",Bytes);
+		receive.receive(Bytes.substring(8));
 		
 	}
 

@@ -23,16 +23,10 @@ public class Rede extends Camada{// Gerencia os pacotes a serem enviados para a 
 	@Override
 	public synchronized void receive(String Bytes) {
 		Imprimir("Rede Recebendo", Bytes);
-		/*if(Bytes.length() == 24)  {
-			
-			if (!Bytes.substring(0,4).equals(get_ip())); // Não é pra mim
-			else 
-				if(!Bytes.subSequence(8, 24).equals(sf.getBuffer().substring(24,40))) sf.resend();
-		}
-		else
-			if (!Bytes.substring(1,5).equals(get_ip())) ; //Não é pra mim			
-			else 
-				receive.receive(Bytes);*/
+		
+		if (!Bytes.substring(1,5).equals(get_ip())) ; //Não é pra mim			
+		else 
+			receive.receive(Bytes);
 			
 	}
 

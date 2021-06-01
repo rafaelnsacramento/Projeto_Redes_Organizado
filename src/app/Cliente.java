@@ -16,12 +16,24 @@ public class Cliente extends App{
 		
 	}
 
+
+
+
+	@Override
+	public void receive(String message) {
+		System.out.println(message);
+		
+	}
+	
+	
+	
 	public static void main(String[] args) {
 		Cliente a = new Cliente ("1111");
-		Cliente b = new Cliente ("0000");
+		
 		a.send("PING");
 		a.send("A");
-		//a.send("RECOVER");
+		a.send("RECOVER");
+	
+		
 	}
-
 }

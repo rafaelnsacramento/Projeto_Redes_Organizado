@@ -59,8 +59,12 @@ public class Sessao extends Camada {// A camada de sessão irá separar a mensagem
 
 	@Override
 	public void receive(String Bytes) {
-		// TODO Auto-generated method stub
+		Imprimir("Sessão Recebendo",Bytes);
+		String send_ = Bytes.substring(1,9);
 		
+		for (int i = 0; i<Bytes.length()/18; i++)
+			send_ = send_ + Bytes.substring(i*18 + 9 , (i+1)*18 -1);
+		receive.receive(send_);
 	}
 	
 	

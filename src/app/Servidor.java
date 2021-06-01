@@ -13,6 +13,17 @@ public class Servidor extends App {
 	}
 	
 	
+	
+
+	@Override
+	public void receive(String message) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+	
+	
 	public static void main(String[] args) {
 		
 	}
