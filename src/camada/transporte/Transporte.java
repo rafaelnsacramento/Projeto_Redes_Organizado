@@ -3,8 +3,8 @@ package camada.transporte;
 import java.util.ArrayList;
 
 import camada.Camada;
+import camada.Rede;
 import camada.Sessao;
-import camada.rede.Rede;
 
 public class Transporte extends Camada implements Runnable { // Gerencia os pacotes, recebe da camada de sessão e adiciona ao cabeçalho o ID do pacote;
 	private GerenciadorPacote gerenciador_pacotes;
@@ -47,7 +47,7 @@ public class Transporte extends Camada implements Runnable { // Gerencia os paco
 
 
 	@Override
-	public void run() {
+	public synchronized void run() {
 		while(true) {
 			try {
 				String send_ = gerenciador_pacotes.enviar_pacote();
