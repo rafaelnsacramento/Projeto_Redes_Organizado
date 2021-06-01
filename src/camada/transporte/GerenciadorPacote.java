@@ -7,6 +7,7 @@ import java.util.Queue;
 public class GerenciadorPacote{
 	private Queue<String> espera;
 	private Queue<String> enviar_pacotes;
+
 	private List<String> confirmar_pacotes;
 	private List<Pacote> pacotes_recebidos;
 	
@@ -31,27 +32,33 @@ public class GerenciadorPacote{
 			return;
 		}
 		
+		if(Bytes.charAt(38) == '1' && Bytes.length() == 40) {
+			enviar_pacotes.add(Bytes);
+			return;
+		}
+		
+		int id = get_packet_id();
 		for (int i = 0; i<Bytes.length() / 24; i++) 
-			enviar_pacotes.add(Bytes.substring(i*24,(i+1)*24) +	String.format("%8s", Integer.toBinaryString(i)).replace(' ', '0') + String.format("%6s", Integer.toBinaryString(get_packet_id())).replace(' ', '0') +"00"	);
+			enviar_pacotes.add(Bytes.substring(i*24,(i+1)*24) +	String.format("%8s", Integer.toBinaryString(i)).replace(' ', '0') + String.format("%6s", Integer.toBinaryString(id)).replace(' ', '0') +"00"	);
 				
 	}
 	
 	
 	public synchronized String enviar_pacote() {
-		if(enviar_pacotes.isEmpty()) return "";
+		if(enviar_pacotes.isEmpty()) return null;
 		String send = enviar_pacotes.poll();
-		confirmar_pacotes.add(send + String.valueOf(System.nanoTime()));
-		notify();
+		if(send.charAt(38) == '0') 
+			confirmar_pacotes.add(send + String.valueOf(System.nanoTime()));
 		return send;
 	}
 	
 	
 	public synchronized void confirmar_pacote(String Bytes) {
-		if(confirmar_pacotes.isEmpty()) return;
+
 		for (int i = 0; i< confirmar_pacotes.size() ; i++) 
 			if(confirmar_pacotes.get(i).substring(24,38).equals(Bytes.substring(24, 38))) {
 				if(Bytes.charAt(39) == '0')
-					enviar_pacotes.add(confirmar_pacotes.get(i));
+					enviar_pacotes.add(confirmar_pacotes.get(i).substring(0,40));
 				
 				confirmar_pacotes.remove(i);				
 				return;
@@ -76,6 +83,8 @@ public class GerenciadorPacote{
 	}
 	
 	
+
+
 	
 	private boolean can_add() {
 		return !pacotes_id.isEmpty();
