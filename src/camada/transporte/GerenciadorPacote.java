@@ -67,7 +67,11 @@ public class GerenciadorPacote{
 		while(elapsed > 20) {
 			enviar_pacotes.add(confirmar_pacotes.get(0).substring(0, 40));
 			confirmar_pacotes.remove(0);				
-			elapsed = (double)(System.nanoTime()  - Long.parseLong(confirmar_pacotes.get(0).substring(40)));
+			try{
+				elapsed = (double)(System.nanoTime()  - Long.parseLong(confirmar_pacotes.get(0).substring(40)));
+			}catch (IndexOutOfBoundsException e) {
+				return;
+			}
 		}
 	}
 	
