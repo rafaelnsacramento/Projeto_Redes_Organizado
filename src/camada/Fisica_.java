@@ -7,9 +7,8 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-public class Fisica extends Camada implements Runnable{
-	
-	
+
+public class Fisica_ extends Camada implements Runnable{
 	
 	private DatagramSocket socket_send;
 	private InetAddress address;
@@ -18,18 +17,18 @@ public class Fisica extends Camada implements Runnable{
     private byte[] buf_receive;
 	private DatagramSocket socket_receive;
 
-	
-	public Fisica(Camada r) {
-		super(r, null);
+	private final String [] ips = {"0000","0001","0010","0011","0100","0101","0110","0111","1000","1001","1010","1011","1100","1101","1110","1111"};
+
+	public Fisica_(Camada r, String ip) {
+		super(r, ip);
 		set_send(null);	
 		
 		try {
 			socket_send = new DatagramSocket();
 	        address = InetAddress.getByName("localhost");
 	        
-	        socket_receive = new DatagramSocket(10000 + Integer.parseInt(r.get_ip()));
+	        socket_receive = new DatagramSocket(4445);
 			buf_receive = new byte[1024];
-
 
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
@@ -38,25 +37,32 @@ public class Fisica extends Camada implements Runnable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+	}
+
+	@Override
+	public void run() {
+		while(true) {
+			receive("");
+		}
 		
 	}
 
-
-
 	@Override
-	public synchronized void send(String bytes) {
-		//Imprimir("Física",bytes);
+	public void send(String bytes) {
+		Imprimir("Física",bytes);
 		buf = bytes.getBytes();
 		
-		DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 4445);
+		
+		
 		
 		try {
-			socket_send.send(packet);
+			for (int i = 0; i<ips.length;i++) {
+				DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 10000 + Integer.parseInt(ips[i]));
+				socket_send.send(packet);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 		
 	}
 
@@ -74,7 +80,7 @@ public class Fisica extends Camada implements Runnable{
             
             //System.out.println("Mensagem Recebida pelo socket: " + received);
             buf_receive = new byte[1024];
-            receive.receive(received.trim());
+           send(received);
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -83,22 +89,16 @@ public class Fisica extends Camada implements Runnable{
 		
 	}
 
-
-
-	@Override
-	public void run() {
-		while(true) {
-			receive("");
-		}
+	
+	
+	
+	public static void main(String[] args) throws IOException {
+		Fisica_ b = new Fisica_(null,"");
+		Thread a = new Thread(b);
+		a.start();
 		
+		     
+		   
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 
 }
