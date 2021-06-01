@@ -42,8 +42,8 @@ public class Pacote {
 	public void add_info(String Bytes) {
 		
 		
-
-		Integer id_frame = Byte.toUnsignedInt(Byte.parseByte(Bytes.substring(24, 32),2));
+		
+		Integer id_frame = Integer.parseInt(Bytes.substring(24, 32),2);
 		if(info_id.contains(id_frame)) return;
 		
 		if(Bytes.charAt(17) == '1') size = id_frame + 1;		

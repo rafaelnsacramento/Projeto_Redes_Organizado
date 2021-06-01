@@ -58,7 +58,7 @@ public class Sessao extends Camada {// A camada de sessão irá separar a mensagem
 	}
 
 	@Override
-	public void receive(String Bytes) {
+	public synchronized void receive(String Bytes) {
 		Imprimir("Sessão Recebendo",Bytes);
 		String send_ = Bytes.substring(1,9);
 		

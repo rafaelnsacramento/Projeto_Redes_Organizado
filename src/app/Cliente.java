@@ -1,5 +1,5 @@
 package app;
-
+import java.util.Scanner;
 
 public class Cliente extends App{
 
@@ -20,7 +20,7 @@ public class Cliente extends App{
 
 
 	@Override
-	public void receive(String message) {
+	public synchronized void receive(String message) {
 		System.out.println(message);
 		
 	}
@@ -29,10 +29,12 @@ public class Cliente extends App{
 	
 	public static void main(String[] args) {
 		Cliente a = new Cliente ("1111");
+		Scanner sc1 = new Scanner(System.in);
 		
-		a.send("PING");
-		a.send("A");
-		a.send("RECOVER");
+		while (true) {
+			a.send(sc1.nextLine());
+		}
+		
 	
 		
 	}

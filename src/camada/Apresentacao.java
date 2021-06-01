@@ -28,13 +28,14 @@ public class Apresentacao extends Camada { //A camada de apresentação pega a men
 	}
 
 	@Override
-	public void receive(String Bytes) {
+	public synchronized void receive(String Bytes) {
 		Imprimir("Apresentação Recebendo", Bytes);
 		String send_ = Bytes.substring(0, 8);
 		String a = Bytes.substring(8);
 		
 		for (int i = 0 ; i < a.length()/8; i++)
-			send_ = send_ + (char)Byte.parseByte(a.substring(i*8, (i+1)*8),2);
+			send_ = send_ + (char)Integer.parseInt(a.substring(i*8, (i+1)*8),2);
+			//send_ = send_ + (char)Byte.parseByte(a.substring(i*8, (i+1)*8),2);
 		receive.receive(send_);
 	}
 

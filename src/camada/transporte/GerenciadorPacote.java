@@ -1,6 +1,7 @@
 package camada.transporte;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -110,7 +111,7 @@ public class GerenciadorPacote{
 	public synchronized String get_pacote_pronto() {
 		if (pacotes_recebidos.isEmpty()) return null;
 		if (pacotes_recebidos.get(0).done()) {
-			String r = pacotes_recebidos.get(0).get_pacote();	
+			String r = pacotes_recebidos.get(0).get_pacote();
 			pacotes_recebidos.remove(0);
 			notify();
 			return r;
@@ -125,6 +126,14 @@ public class GerenciadorPacote{
 	
 	
 	
+	public synchronized void limpa() {
+		boolean [] used = new boolean [64];
+		Arrays.fill(used, false);
+		for (String pac: enviar_pacotes) 
+			used[Byte.parseByte(pac.substring(32, 38),2)] = true;
+		for (int i = 0; i < 64; i++)
+			if (used[i]) pacotes_id.add(i);
+	}
 	
 	
 	

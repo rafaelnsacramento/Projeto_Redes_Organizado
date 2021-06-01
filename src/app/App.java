@@ -2,6 +2,7 @@ package app;
 
 import camada.Camada;
 import camada.aplicacao.AplicacaoCliente;
+import camada.aplicacao.AplicacaoServidor;
 
 public abstract class App{
 	protected String IP;
@@ -9,7 +10,9 @@ public abstract class App{
 	
 	public App(String ip) {
 		this.IP = ip;
-		send = new AplicacaoCliente(this,ip);
+		if(ip.equals("0000"))
+			send = new AplicacaoServidor(this,ip);
+		else send = new AplicacaoCliente(this,ip);
 	}
 	
 	

@@ -21,19 +21,28 @@ public class AplicacaoCliente extends Camada{
 		String a = bytes.substring(8);
 		String send_message = null;
 		
-		if (a.length() == 1)
+		if (a.length() == 1) {
 			send_message =  a;
-		
+			send.send(bytes.substring(0, 8) + send_message);
+			return;
+		}
 		switch (a) {
 			case "PING":
 				send_message = "PN";
-				break;
+				send.send(bytes.substring(0, 8) + send_message);
+				return;
 			case "RECOVER":
 				send_message = "RC";
-				break;
+				send.send(bytes.substring(0, 8) + send_message);
+				return;
+			case "LAST":
+				send_message = "LT";
+				send.send(bytes.substring(0,8) + send_message);
+				return;
+			
 		}
 		
-		send.send(bytes.substring(0, 8) + send_message);
+		receive.receive("Comando não implementado");
 	}
 
 
