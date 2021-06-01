@@ -43,7 +43,7 @@ public class Transporte extends Camada implements Runnable { // Gerencia os paco
 			return;
 		}			
 		gerenciador_pacotes.add_pacote(send_res +"11");
-		
+		gerenciador_pacotes.add_received_pacote(Bytes);
 		notify();
 		
 		
@@ -60,7 +60,10 @@ public class Transporte extends Camada implements Runnable { // Gerencia os paco
 				if(send_ == null) ;
 				else send.send(send_);
 				gerenciador_pacotes.timeout_pacotes();
-				wait(5000);
+				send_ = gerenciador_pacotes.get_pacote_pronto();
+				if(send_ == null) ;
+				else receive.receive(send_);
+				wait(2500);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

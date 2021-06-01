@@ -16,14 +16,24 @@ public class Cliente extends App{
 		
 	}
 
-	public static void main(String[] args) {
-		//Cliente a = new Cliente ("1111");
-		//Cliente b = new Cliente ("0000");
-		//a.send("PING");
-		//a.send("A");
-		//a.send("RECOVER");
-		String Bytes = "01100110";
-		System.out.println(Byte.toUnsignedInt(Byte.parseByte(Bytes,2)));
-	}
 
+
+
+	@Override
+	public void receive(String message) {
+		System.out.println(message);
+		
+	}
+	
+	
+	
+	public static void main(String[] args) {
+		Cliente a = new Cliente ("1111");
+		
+		a.send("PING");
+		a.send("A");
+		a.send("RECOVER");
+	
+		
+	}
 }

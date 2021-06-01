@@ -1,5 +1,6 @@
 package camada.transporte;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -17,8 +18,8 @@ public class GerenciadorPacote{
 								//												numero do dataframe				id do pacote			10=ack error 11=ack
 		espera = new LinkedList<String>();
 		enviar_pacotes = new LinkedList<String>();
-		confirmar_pacotes = new LinkedList<String>();
-		pacotes_recebidos = new LinkedList<Pacote>();
+		confirmar_pacotes = new ArrayList<String>();
+		pacotes_recebidos = new ArrayList<Pacote>();
 		pacotes_id = new LinkedList<Integer>();
 		for (int i = 0; i< 64; i++) pacotes_id.add(i);
 	}
@@ -32,7 +33,7 @@ public class GerenciadorPacote{
 			return;
 		}
 		
-		if(Bytes.charAt(38) == '1' && Bytes.length() == 40) {
+		if(Bytes.length() == 40 && Bytes.charAt(38) == '1' ) {
 			enviar_pacotes.add(Bytes);
 			return;
 		}
@@ -86,6 +87,47 @@ public class GerenciadorPacote{
 
 
 	
+	
+	
+	
+	public synchronized void add_received_pacote(String Bytes) {
+		String id_ = Bytes.substring(32,38);
+		
+		for (int i = 0; i<pacotes_recebidos.size();i++)
+			if(pacotes_recebidos.get(i).get_id().equals(id_)) {
+				pacotes_recebidos.get(i).add_info(Bytes);
+				return;
+			}		
+		
+		pacotes_recebidos.add(new Pacote(id_));
+		pacotes_recebidos.get(pacotes_recebidos.size() - 1).add_info(Bytes);
+	}
+	
+	
+	
+	
+	
+	public synchronized String get_pacote_pronto() {
+		if (pacotes_recebidos.isEmpty()) return null;
+		if (pacotes_recebidos.get(0).done()) {
+			String r = pacotes_recebidos.get(0).get_pacote();	
+			pacotes_recebidos.remove(0);
+			notify();
+			return r;
+
+		}
+		
+		return null;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	private boolean can_add() {
 		return !pacotes_id.isEmpty();
 	}
@@ -94,6 +136,10 @@ public class GerenciadorPacote{
 		return pacotes_id.poll();
 	}
 
+	
+	
+	
+	
 
 
 
