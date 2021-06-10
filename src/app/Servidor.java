@@ -1,12 +1,25 @@
 package app;
 
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 public class Servidor extends App {
 
 	private List<Cliente> clientes;
-	
+	private JFrame janela;
+	DefaultListModel<String> resposta ;
+
 	
 	class Cliente{
 		private String IP;
@@ -54,6 +67,22 @@ public class Servidor extends App {
 	public Servidor(String ip) {
 		super(ip);
 		clientes = new ArrayList<Cliente>();
+		
+		
+		janela = new JFrame("Servidor " + ip);
+		janela.setSize(400,400);
+		janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		janela.setLayout(new GridLayout(1,1,5,5));
+		
+;  
+		
+		resposta =  new DefaultListModel<String>();
+		JList<String> list = new JList<String>(resposta);
+		
+		janela.add(new JScrollPane(list));		
+		  
+		
+		janela.setVisible(true);
 	}
 
 	@Override
@@ -61,6 +90,7 @@ public class Servidor extends App {
 		String send_my = IP;
 		String send_dest = message.substring(0,4);
 		String message_ = message.substring(4);
+		resposta.addElement("Enviando: "+ send_dest + send_my + message_);
 		
 		send.send(send_dest + send_my + message_);
 		
@@ -72,7 +102,7 @@ public class Servidor extends App {
 	@Override
 	public void receive(String message) {
 		System.out.println(message);
-		
+		resposta.addElement("Recebendo: "+ message);
 		String cliente = message.substring(0,4);
 		String message_ = message.substring(4);
 		Cliente c = get_cliente(cliente);
