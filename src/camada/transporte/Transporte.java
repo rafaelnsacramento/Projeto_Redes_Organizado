@@ -19,10 +19,9 @@ public class Transporte extends Camada implements Runnable { // Gerencia os paco
 	
 
 	@Override
-	public synchronized void send(String bytes) {
+	public void send(String bytes) {
 		Imprimir("Transporte", bytes);		
 		gerenciador_pacotes.add_pacote(bytes);
-		notify();
 	}
 
 
@@ -63,7 +62,8 @@ public class Transporte extends Camada implements Runnable { // Gerencia os paco
 				send_ = gerenciador_pacotes.get_pacote_pronto();
 				if(send_ == null) ;
 				else receive.receive(send_);
-				wait(2500);
+				gerenciador_pacotes.limpa();
+				wait(200);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
